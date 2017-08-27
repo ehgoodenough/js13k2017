@@ -1,0 +1,27 @@
+{
+  "name": "js13k-2017",
+  "version": "0.0.0",
+  "description": "A game for js13k",
+  "author": "Andrew McPherson <@ehgoodenough>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ehgoodenough/js13k-2017"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.12",
+    "chalk": "^2.0.1",
+    "chokidar": "^1.7.0",
+    "filesize": "^3.5.10",
+    "gulp": "^3.9.1",
+    "gulp-if": "^2.0.2",
+    "gulp-uglify": "^3.0.0",
+    "map-stream": "0.0.7",
+    "moment": "^2.18.1",
+    "pump": "^1.0.2",
+    "rimraf": "^2.6.1"
+  },
+  "dependencies": {
+    "debounce": "^1.0.2"
+  }
+}
