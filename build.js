@@ -43,7 +43,7 @@ var IS_JS = /.js$/
 var UGLIFY = {
     mangle: {
         toplevel: true,
-        properties: true,
+        // properties: true,
     },
     compress: {
         unsafe: true,
@@ -81,3 +81,5 @@ rimraf("./builds", () => {
         })
     }, 200, true))
 })
+
+// https://github.com/ehgoodenough/overclock/blob/6e695819d33c458322f7d24f7686ac1934a68b3d/build.js
