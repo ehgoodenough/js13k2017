@@ -18,7 +18,7 @@ body {
     overflow: hidden;
     
     color: #FFF;
-    background-color: #222;
+    background-color: blue;
 }
 
 @media(min-aspect-ratio: 16/9) {

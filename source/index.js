@@ -55,72 +55,104 @@ canvas.renderCircle = function(entity) {
 // canvas.render({width: 32, height: 32, position: {x: 32, y: 32}, anchor: {x: 0.5, y: 0.5}})
 // canvas.render({type: "circle", position: {x: 32, y: 32}, size: 32})
 
+////////////
+// Input //
+//////////
+
+var isDown = false
+
+window.addEventListener("keydown", function(event) {
+    if(!isDown) {
+        isDown = Date.now()
+    }
+})
+
+window.addEventListener("keyup", function(event) {
+    isDown = false
+})
+
 ///////////////
-// pianokeys //
+// Entities //
 /////////////
 
-var pianokeys = []
-var NUM_OF_KEYS = 22
-
-// White keys
-for(var k = 1; k < NUM_OF_KEYS; k += 1) {
-    pianokeys.push({
-        anchor: {x: 0.5, y: 0},
-        position: {x: k * (32 + 2), y: 120},
-        width: 32,
-        height: 32 * 4,
-        color: "#FFF"
-    })
-}
-
-// Black keys
-for(var k = 1; k < NUM_OF_KEYS; k += 1) {
-    if((k % 7) % 4 == 0) {
-        continue
-    }
-    pianokeys.push({
-        anchor: {x: 0.5, y: 0},
-        position: {x: k * (32 + 2) + 16, y: 128},
-        width: 16, height: 32 * 2,
-        color: "#000"
-    })
-}
-
 var player = {
-    position: {x: 64, y: 220},
-    anchor: {x: 0.5, y: 0.5},
+    position: {x: 64, y: FRAME_HEIGHT},
+    anchor: {x: 0.5, y: 1},
     width: 32, height: 32,
-    distance: 0
+    distance: 0,
+    velocity: {y: 0},
 }
+
+var badguy = {
+    position: {x: FRAME_WIDTH - 64, y: FRAME_HEIGHT},
+    anchor: {x: 0.5, y: 1},
+    width: 32, height: 32,
+    color: "black",
+}
+
+function getDistance(a, b) {
+    var x = a.x - b.x
+    var y = a.y - b.y
+    
+    return Math.sqrt(x*x + y*y)
+}
+
+//////////////
+// Looping //
+////////////
+
+var GRAVITY = 1
 
 var loop = function(func) {
     
     var speed = 1.5
+    var delta = 1000 / 60
     
-    ///////////////
-    // Updating //
-    /////////////
-    
-    pianokeys.forEach(function(pk) {
-        pk.position.x -= speed
-        if(pk.position.x + (pk.width * pk.anchor.x) < 0) {
-            pk.position.x += (NUM_OF_KEYS - 1) * (32+2)
-        }
-    })
+    //////////////////////
+    // Updating Player //
+    ////////////////////
     
     player.distance += speed
-    // player.position.y = 220 + (Math.sin(player.distance / 9) * 10)
+    
+    if(isDown) {
+        // if(Date.now() - isDown < delta) {
+            if(player.position.y == FRAME_HEIGHT) {
+                player.velocity.y = -15
+            }
+        //  }
+    }
+    
+    // Translation for Jumping
+    player.position.y += player.velocity.y
+    
+    if(player.position.y > FRAME_HEIGHT) {
+        player.position.y = FRAME_HEIGHT
+        player.velocity.y = 0
+    }
+    
+    // Deceleration via Gravity
+    player.velocity.y += GRAVITY
+    
+    ///////////////////////
+    // Updating Bad Guy //
+    /////////////////////
+    
+    badguy.position.x -= 10
+    
+    if(getDistance(badguy.position, player.position) < 32) {
+        throw "Game Over"
+    }
+    
+    if(badguy.position.x < -10) {
+        badguy.position.x = FRAME_WIDTH + 32
+    }
     
     ////////////////
     // Rendering //
     //////////////
     
     canvas.clear()
-
-    pianokeys.forEach(function(entity) {
-        canvas.render(entity)
-    })
-    
+    canvas.render(badguy)
     canvas.render(player)
     
     //////////////
